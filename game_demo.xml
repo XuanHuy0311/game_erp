@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Nhà phát hành -->
+        <record id="publisher_1" model="game.publisher">
+            <field name="name">EA Games</field>
+            <field name="country">USA</field>
+        </record>
+
+        <record id="publisher_2" model="game.publisher">
+            <field name="name">Garena</field>
+            <field name="country">Viet Nam</field>
+        </record>
+
+        <!-- Game -->
+        <record id="game_1" model="game.game">
+            <field name="name">Plant vs Zombie</field>
+            <field name="description">Plant vs Zombies một trò chơi kinh điển, cuộc chiến không hồi kết giữa loài cây trong vườn và những con Zombies</field>
+			<field name="genre">strategy</field>
+            <field name="release_date">2009/05/05</field>
+            <field name="status">released</field>
+            <field name="notes">Yêu cầu IOS 13.0+ và Android 7.0+</field>
+            <field name="publisher_id" ref="publisher_1"/>
+        </record>
+
+        <record id="game_2" model="game.game">
+            <field name="name">Liên Quân Mobile</field>
+            <field name="description">Với sự đầu tư vô cùng kỹ lưỡng, Liên Quân Mobile là một trong những tựa game trên di động có đồ họa và âm thanh chất lượng nhất hiện nay</field>
+			<field name="genre">moba</field>
+            <field name="release_date">2016/11/29</field>
+            <field name="status">released</field>
+            <field name="notes">Yêu cầu IOS 14.0+ và Android 8.0+</field>
+            <field name="publisher_id" ref="publisher_2"/>
+        </record>
+    </data>
+</openerp>

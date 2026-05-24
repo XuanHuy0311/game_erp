@@ -17,15 +17,20 @@
             <field name="arch" type="xml">
                 <tree string="Danh sách các tựa game">
                     <field name="name"/>
-                    <field name="display_studio_name"/>
-                    <field name="display_name"/>
-                    <field name="display_genres_name"/>
+                    <field name="description"/>
+                    <field name="genres"/>
+                    <field name="platforms"/>
                     <field name="release_date"/>
                     <field name="status"/>
                     <field name="price"/>
+                    <field name="publisher_id"/>
+                    <field name="studio_id"/>
+                    <field name="series_id"/>
+                    <field name="version_id"/>
                     <field name="current_version"/>
                     <field name="latest_version_display"/>
                     <field name="has_update" invisible="1"/>
+                    <field name="notes"/>
                     <button
                         name="action_update_game"
                         string="Cập nhật"

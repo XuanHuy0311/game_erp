@@ -1,9 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <!-- Vai trò -->
+        <record id="role_designer" model="game.role">
+            <field name="name">Game Designer</field>
+        </record>
+
+        <record id="role_programmer" model="game.role">
+            <field name="name">Programmer</field>
+        </record>
+
+        <record id="role_artist" model="game.role">
+            <field name="name">Artist</field>
+        </record>
+
+        <!-- Nhân viên -->
+        <record id="member_1" model="game.member">
+            <field name="name">Nguyen Van An</field>
+            <field name="roles" eval="[(6, 0, [ref('role_designer')])]"/>
+        </record>
+
+        <record id="member_2" model="game.member">
+            <field name="name">Tran Thi Binh</field>
+            <field name="roles" eval="[(6, 0, [ref('role_programmer'), ref('role_artist')])]"/>
+        </record>
+
+        <!-- Studio -->
+        <record id="studio_1" model="game.studio">
+            <field name="name">PopCap Studio</field>
+            <field name="headquarter">Seattle, USA</field>
+            <field name="members" eval="[(6, 0, [ref('member_1'), ref('member_2')])]"/>
+        </record>
+
+        <record id="studio_2" model="game.studio">
+            <field name="name">Timi Studio Group</field>
+            <field name="headquarter">Shenzhen, China</field>
+            <field name="members" eval="[(6, 0, [ref('member_2')])]"/>
+        </record>
+
+        <record id="studio_pubg" model="game.studio">
+            <field name="name">PUBG Studios</field>
+            <field name="headquarter">Seoul, Korea</field>
+            <field name="members" eval="[(6, 0, [ref('member_1'), ref('member_2')])]"/>
+        </record>
+
+        <record id="studio_supercell" model="game.studio">
+            <field name="name">Supercell</field>
+            <field name="headquarter">Helsinki, Finland</field>
+            <field name="members" eval="[(6, 0, [ref('member_1')])]"/>
+        </record>
+
         <!-- Nhà phát hành -->
         <record id="publisher_1" model="game.publisher">
-            <field name="name">EA Games</field>
+            <field name="name">Electronic Arts</field>
             <field name="country">USA</field>
         </record>
 
@@ -12,25 +61,155 @@
             <field name="country">Viet Nam</field>
         </record>
 
+        <record id="publisher_krafton" model="game.publisher">
+            <field name="name">Krafton</field>
+            <field name="country">Korea</field>
+        </record>
+
+        <record id="publisher_supercell" model="game.publisher">
+            <field name="name">Supercell Publisher</field>
+            <field name="country">Finland</field>
+        </record>
+
+        <!-- Thể loại -->
+        <record id="genre_strategy" model="game.genre">
+            <field name="name">Strategy</field>
+        </record>
+
+        <record id="genre_moba" model="game.genre">
+            <field name="name">MOBA</field>
+        </record>
+
+        <record id="genre_casual" model="game.genre">
+            <field name="name">Casual</field>
+        </record>
+
+        <record id="genre_battle_royale" model="game.genre">
+            <field name="name">Battle Royale</field>
+        </record>
+
+        <record id="genre_action" model="game.genre">
+            <field name="name">Action</field>
+        </record>
+
+        <!-- Nền tảng -->
+        <record id="platform_pc" model="game.platform">
+            <field name="name">PC</field>
+        </record>
+
+        <record id="platform_android" model="game.platform">
+            <field name="name">Android</field>
+        </record>
+
+        <record id="platform_ios" model="game.platform">
+            <field name="name">iOS</field>
+        </record>
+
+        <!-- Series -->
+        <record id="series_pvz" model="game.series">
+            <field name="name">Plants vs. Zombies</field>
+            <field name="description">Series game thủ thành kết hợp chiến thuật vui nhộn.</field>
+        </record>
+
+        <record id="series_aov" model="game.series">
+            <field name="name">Arena of Valor</field>
+            <field name="description">Series game MOBA trên di động.</field>
+        </record>
+
+        <record id="series_pubg" model="game.series">
+            <field name="name">PUBG</field>
+            <field name="description">Series game battle royale sinh ton.</field>
+        </record>
+
+        <record id="series_clash" model="game.series">
+            <field name="name">Clash of Clans</field>
+            <field name="description">Series game chien thuat xay dung lang va chien dau bang clan.</field>
+        </record>
+
         <!-- Game -->
         <record id="game_1" model="game.game">
-            <field name="name">Plant vs Zombie</field>
-            <field name="description">Plant vs Zombies một trò chơi kinh điển, cuộc chiến không hồi kết giữa loài cây trong vườn và những con Zombies</field>
-			<field name="genre">strategy</field>
-            <field name="release_date">2009/05/05</field>
-            <field name="status">released</field>
-            <field name="notes">Yêu cầu IOS 13.0+ và Android 7.0+</field>
+            <field name="name">Plants vs. Zombies Remastered</field>
+            <field name="description">Phiên bản làm mới của game thủ thành Plants vs. Zombies.</field>
+            <field name="genres" eval="[(6, 0, [ref('genre_strategy'), ref('genre_casual')])]"/>
+            <field name="release_date">2099-05-05 00:00:00</field>
+            <field name="status">upcoming</field>
+            <field name="notes">Hỗ trợ PC và thiết bị di động.</field>
+            <field name="price">9.99</field>
             <field name="publisher_id" ref="publisher_1"/>
+            <field name="studio_id" ref="studio_1"/>
+            <field name="series_id" ref="series_pvz"/>
+            <field name="platforms" eval="[(6, 0, [ref('platform_pc'), ref('platform_android'), ref('platform_ios')])]"/>
+            <field name="current_version">1.0.0</field>
         </record>
 
         <record id="game_2" model="game.game">
-            <field name="name">Liên Quân Mobile</field>
-            <field name="description">Với sự đầu tư vô cùng kỹ lưỡng, Liên Quân Mobile là một trong những tựa game trên di động có đồ họa và âm thanh chất lượng nhất hiện nay</field>
-			<field name="genre">moba</field>
-            <field name="release_date">2016/11/29</field>
-            <field name="status">released</field>
-            <field name="notes">Yêu cầu IOS 14.0+ và Android 8.0+</field>
+            <field name="name">Lien Quan Mobile 2027</field>
+            <field name="description">Game MOBA trên di động với nhiều chế độ thi đấu.</field>
+            <field name="genres" eval="[(6, 0, [ref('genre_moba')])]"/>
+            <field name="release_date">2099-11-29 00:00:00</field>
+            <field name="status">upcoming</field>
+            <field name="notes">Yêu cầu Android 8.0+ hoặc iOS 14.0+.</field>
+            <field name="price">1.99</field>
             <field name="publisher_id" ref="publisher_2"/>
+            <field name="studio_id" ref="studio_2"/>
+            <field name="series_id" ref="series_aov"/>
+            <field name="platforms" eval="[(6, 0, [ref('platform_android'), ref('platform_ios')])]"/>
+            <field name="current_version">1.0.0</field>
+        </record>
+
+        <record id="game_pubg" model="game.game">
+            <field name="name">PUBG Battlegrounds 2099</field>
+            <field name="description">Game battle royale nhieu nguoi choi voi ban do rong va chien thuat sinh ton.</field>
+            <field name="genres" eval="[(6, 0, [ref('genre_battle_royale'), ref('genre_action')])]"/>
+            <field name="release_date">2099-03-23 00:00:00</field>
+            <field name="status">upcoming</field>
+            <field name="notes">Ho tro PC va thiet bi di dong.</field>
+            <field name="price">12.99</field>
+            <field name="publisher_id" ref="publisher_krafton"/>
+            <field name="studio_id" ref="studio_pubg"/>
+            <field name="series_id" ref="series_pubg"/>
+            <field name="platforms" eval="[(6, 0, [ref('platform_pc'), ref('platform_android'), ref('platform_ios')])]"/>
+            <field name="current_version">2.0.0</field>
+        </record>
+
+        <record id="game_clash_of_clans" model="game.game">
+            <field name="name">Clash of Clans 2099</field>
+            <field name="description">Game chien thuat xay dung lang, nang cap quan doi va chien dau cung clan.</field>
+            <field name="genres" eval="[(6, 0, [ref('genre_strategy'), ref('genre_casual')])]"/>
+            <field name="release_date">2099-08-02 00:00:00</field>
+            <field name="status">upcoming</field>
+            <field name="notes">Phu hop cho Android va iOS.</field>
+            <field name="price">4.99</field>
+            <field name="publisher_id" ref="publisher_supercell"/>
+            <field name="studio_id" ref="studio_supercell"/>
+            <field name="series_id" ref="series_clash"/>
+            <field name="platforms" eval="[(6, 0, [ref('platform_android'), ref('platform_ios')])]"/>
+            <field name="current_version">1.0.0</field>
+        </record>
+
+        <!-- Phiên bản -->
+        <record id="version_game_1_1" model="game.version">
+            <field name="version_name">1.1.0</field>
+            <field name="enhancement_notes">Cân bằng màn chơi và bổ sung hiệu ứng hình ảnh.</field>
+            <field name="game_id" ref="game_1"/>
+        </record>
+
+        <record id="version_game_2_1" model="game.version">
+            <field name="version_name">1.1.0</field>
+            <field name="enhancement_notes">Bổ sung tướng mới và cải thiện hiệu năng trận đấu.</field>
+            <field name="game_id" ref="game_2"/>
+        </record>
+
+        <record id="version_pubg_1" model="game.version">
+            <field name="version_name">2.1.0</field>
+            <field name="enhancement_notes">Them ban do moi, can bang vu khi va toi uu hieu nang.</field>
+            <field name="game_id" ref="game_pubg"/>
+        </record>
+
+        <record id="version_clash_1" model="game.version">
+            <field name="version_name">1.1.0</field>
+            <field name="enhancement_notes">Them cap nha chinh moi va cai thien matchmaking clan war.</field>
+            <field name="game_id" ref="game_clash_of_clans"/>
         </record>
     </data>
 </openerp>

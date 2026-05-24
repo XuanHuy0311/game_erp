@@ -2,6 +2,42 @@
 from datetime import datetime
 from openerp.osv import fields, osv
 
+try:
+    integer_types = (int, long)
+except NameError:
+    integer_types = (int,)
+
+
+def _as_list(ids):
+    if isinstance(ids, integer_types):
+        return [ids]
+    return list(ids)
+
+
+def _has_model_reference(pool, cr, uid, model_name, field_name, ids, context=None):
+    return bool(pool.get(model_name).search(
+        cr,
+        uid,
+        [(field_name, 'in', _as_list(ids))],
+        limit=1,
+        context=context
+    ))
+
+
+def _has_relation_reference(cr, table_name, column_name, ids):
+    cr.execute(
+        'SELECT 1 FROM %s WHERE %s = ANY(%%s) LIMIT 1' % (table_name, column_name),
+        (_as_list(ids),)
+    )
+    return bool(cr.fetchone())
+
+
+def _raise_delete_restricted(record_name):
+    raise osv.except_osv(
+        u'Lỗi',
+        u'Không thể xóa %s vì đang được sử dụng bởi dữ liệu khóa ngoại!' % record_name
+    )
+
 class Game(osv.osv):
     """
     GAME MODEL - Core entity for video game information
@@ -13,6 +49,11 @@ class Game(osv.osv):
 
     _name = 'game.game'
     _log_access = True
+
+    def unlink(self, cr, uid, ids, context=None):
+        if _has_model_reference(self.pool, cr, uid, 'game.version', 'game_id', ids, context=context):
+            _raise_delete_restricted(u'game')
+        return super(Game, self).unlink(cr, uid, ids, context=context)
 
     def create(self, cr, uid, vals, context=None):
     # ('vals', {u'status': u'released', u'name': u'\u0111\xe0', u'release_date': u'2009-05-05 00:00:00', u'series_id': 1, u'platforms':
@@ -362,7 +403,7 @@ class Game(osv.osv):
             'game_platform_rel',
             'game_id',
             'platform_id',
-            'Máy tính',
+            'Nền tảng',
             required=True
         ),
 
@@ -419,6 +460,11 @@ class Publisher(osv.osv):
 
     _name = 'game.publisher'
     _log_access = True
+
+    def unlink(self, cr, uid, ids, context=None):
+        if _has_model_reference(self.pool, cr, uid, 'game.game', 'publisher_id', ids, context=context):
+            _raise_delete_restricted(u'nhà phát hành')
+        return super(Publisher, self).unlink(cr, uid, ids, context=context)
 
     def create(self, cr, uid, vals, context=None):
         if 'name' in vals:
@@ -498,6 +544,13 @@ class Studio(osv.osv):
 
     _name = 'game.studio'
     _log_access = True
+
+    def unlink(self, cr, uid, ids, context=None):
+        if _has_model_reference(self.pool, cr, uid, 'game.game', 'studio_id', ids, context=context):
+            _raise_delete_restricted(u'studio')
+        if _has_relation_reference(cr, 'game_studio_member_rel', 'studio_id', ids):
+            _raise_delete_restricted(u'studio')
+        return super(Studio, self).unlink(cr, uid, ids, context=context)
 
     def create(self, cr, uid, vals, context=None):
         if 'name' in vals:
@@ -588,6 +641,13 @@ class Member(osv.osv):
 
     _name = 'game.member'  # Database table: game_member
     _log_access = True
+
+    def unlink(self, cr, uid, ids, context=None):
+        if _has_relation_reference(cr, 'game_studio_member_rel', 'member_id', ids):
+            _raise_delete_restricted(u'nhân viên')
+        if _has_relation_reference(cr, 'game_member_role_rel', 'member_id', ids):
+            _raise_delete_restricted(u'nhân viên')
+        return super(Member, self).unlink(cr, uid, ids, context=context)
 
     def _get_studios_display(self, cr, uid, ids, field_name, arg, context=None):
         """
@@ -712,6 +772,11 @@ class Genre(osv.osv):
     _name = 'game.genre'
     _log_access = True
 
+    def unlink(self, cr, uid, ids, context=None):
+        if _has_relation_reference(cr, 'game_genre_rel', 'genre_id', ids):
+            _raise_delete_restricted(u'thể loại')
+        return super(Genre, self).unlink(cr, uid, ids, context=context)
+
     def create(self, cr, uid, vals, context=None):
         if 'name' in vals:
             vals['name'] = vals['name'].strip()
@@ -784,6 +849,11 @@ class Platform(osv.osv):
 
     _name = 'game.platform'
     _log_access = True
+
+    def unlink(self, cr, uid, ids, context=None):
+        if _has_relation_reference(cr, 'game_platform_rel', 'platform_id', ids):
+            _raise_delete_restricted(u'nền tảng')
+        return super(Platform, self).unlink(cr, uid, ids, context=context)
 
     def create(self, cr, uid, vals, context=None):
         if 'name' in vals:
@@ -858,6 +928,11 @@ class Series(osv.osv):
     _name = 'game.series'
     _log_access = True
 
+    def unlink(self, cr, uid, ids, context=None):
+        if _has_model_reference(self.pool, cr, uid, 'game.game', 'series_id', ids, context=context):
+            _raise_delete_restricted(u'series')
+        return super(Series, self).unlink(cr, uid, ids, context=context)
+
     def create(self, cr, uid, vals, context=None):
         if 'name' in vals:
             vals['name'] = vals['name'].strip()
@@ -924,6 +999,11 @@ class Series(osv.osv):
 class Role(osv.osv):
     _name = 'game.role'
     _log_access = True
+
+    def unlink(self, cr, uid, ids, context=None):
+        if _has_relation_reference(cr, 'game_member_role_rel', 'role_id', ids):
+            _raise_delete_restricted(u'vai trò')
+        return super(Role, self).unlink(cr, uid, ids, context=context)
 
     def create(self, cr, uid, vals, context=None):
         if 'name' in vals:
